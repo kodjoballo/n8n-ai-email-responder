@@ -1,0 +1,124 @@
+{
+  "name": "AI_email_responder",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c0bdfa63-17d7-40d8-ad68-7b98c31fad32",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "OVcUtvgHBuzqKKq9",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer gsk_YOUR_GROQ_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a professional email assistant. Write a concise, polite and professional reply to the email provided. Sign off as Kodjo Hugues Ballo.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Please write a reply to this email: {{ $json.snippet }}\"\n    }\n  ],\n  \"max_tokens\": 500\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "2229b85b-f519-4ab2-9c0d-3bbe154fa2be",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $('Gmail Trigger').item.json.Subject }}",
+        "message": "={{ $json.choices[0].message.content }}",
+        "options": {
+          "sendTo": "={{ $('Gmail Trigger').item.json.From }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "5adf9f96-384a-4fde-a1ce-251cdbb1dd64",
+      "name": "Create a draft",
+      "webhookId": "ff73ec79-b98a-4680-95c1-5756ab303274",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "OVcUtvgHBuzqKKq9",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c6d2fa47-e281-4097-b82e-7fd8064018d7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6a8ecb3b2bd37672236b8ba2ca440081b541bde1585825edf1f6ac335df70e8e"
+  },
+  "id": "jzAc9Lc84dDdPZU7",
+  "tags": []
+}

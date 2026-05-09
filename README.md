@@ -47,7 +47,7 @@ Gmail Trigger → HTTP Request (Groq LLM API) → Gmail (save as draft)
 
 ## 🎥 Demo
 
-[▶ Click to watch the demo video](https://youtube.com/your-link-here)
+[▶ Click to watch the demo video](https://youtu.be/3v0XTr2PC84)
 
 ---
 

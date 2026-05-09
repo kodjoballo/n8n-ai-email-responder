@@ -81,9 +81,9 @@ You can customize this prompt to match your tone, industry, or specific use case
 - Copy and save the key
 
 **2. Import the workflow**
-- Download `ai_workflow.json` from this repo
+- Download `AI_email_responder.json` from this repo
 - In n8n, go to **Workflows** → **Import from file**
-- Select `ai_workflow.json`
+- Select `AI_email_responder.json`
 
 **3. Connect your credentials**
 - **Gmail Trigger node** → add Google OAuth2 credential
